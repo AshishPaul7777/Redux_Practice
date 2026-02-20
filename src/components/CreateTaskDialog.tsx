@@ -12,7 +12,7 @@ export default function CreateTaskDialog() {
         id: uuid(),
         title: "Sample Task",
         description: "This is a Jira MVP task",
-        status: "TODO",
+        status: "todo",
         priority: "P2",
       })
     );

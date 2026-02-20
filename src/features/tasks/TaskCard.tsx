@@ -1,26 +1,22 @@
-import { useState } from "react";
-import type { Task } from "@/types/task";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { GripVertical } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import type { Task } from "@/types/task";
 import TaskDetailsModal from "./TaskDetailsModal";
-// import { GripVertical } from "lucide-react/dist/esm/icons/grip-vertical";
-
 
 export default function TaskCard({ task }: { task: Task }) {
   const [open, setOpen] = useState(false);
 
-  const { 
+  const {
     attributes,
-     setNodeRef,
-     listeners, 
-     transform, 
-     transition, 
-    } =
-    useSortable({
-      id: task.id,
-    });
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id: task.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -29,52 +25,35 @@ export default function TaskCard({ task }: { task: Task }) {
 
   return (
     <>
-     <Card
-  ref={setNodeRef}
-  style={style}
-  {...attributes}
-  {...listeners}
-  className="p-3 mb-3 space-y-2 cursor-pointer"
-  onClick={() => setOpen(true)}
-
->
-        <div className="flex justify-between items-center">
-    <div className="flex items-center gap-2">
-      <span
-        {...listeners}
-        onClick={(e) => e.stopPropagation()}
-        className="cursor-grab select-none text-muted-foreground"
+      <Card
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        onClick={() => setOpen(true)}
+        className="p-3 mb-3 space-y-2 cursor-pointer hover:shadow-md transition"
       >
-       
-      </span>
+        {/* Drag Handle */}
+        <div
+          {...listeners}
+          onClick={(e) => e.stopPropagation()} 
+          className="cursor-grab text-muted-foreground"
+        >
+          <GripVertical size={16} />
+        </div>
 
-      <h4 className="font-semibold">{task.title}</h4>
-    </div>
+        <div className="flex justify-between items-center">
+          <h4 className="font-semibold">{task.title}</h4>
+          <Badge variant="outline">{task.priority}</Badge>
+        </div>
 
-    <Badge
-  variant="outline"
-  className={
-    task.priority === "P0"
-      ? "border-red-500 text-red-600"
-      : task.priority === "P1"
-      ? "border-orange-500 text-orange-600"
-      : task.priority === "P2"
-      ? "border-yellow-500 text-yellow-600"
-      : "border-green-500 text-green-600"
-  }
->
-  {task.priority}
-</Badge>
-  </div>
-
-  <p className="text-sm text-muted-foreground">{task.description}</p>
-</Card>
-
+        <p className="text-sm text-muted-foreground">
+          {task.description}
+        </p>
+      </Card>
 
       <TaskDetailsModal
         task={task}
         open={open}
-        
         onClose={() => setOpen(false)}
       />
     </>
